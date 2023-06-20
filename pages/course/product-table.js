@@ -7,27 +7,19 @@ export default function Product1Table() {
     const [data1,setData1] = useState(data.products)
     const [status,setStatus] = useState(0)
     
-
-    function sort(){
-        let sortdata
-        if (!status){
-            sortdata = data.products.sort((a,b)=>{
-            return a.price-b.price })
-            setStatus(prestatus => !prestatus)
-        }
-        else{
-            sortdata = data.products.sort((a,b)=>{
-            return -a.price+b.price })
-            setStatus(prestatus => !prestatus)
-        }
+    function sort(){ 
+        let sortdata = [...data.products].sort((a,b)=>{
+        return status ? a.price - b.price : -a.price+b.price })
+        
+        setStatus(prestatus => !prestatus)
         setData1(sortdata);
+        }
         // console.log(sortdata)
-}
 
 return(
 <>
     <div>
-        <button className="sortprice" onClick={sort}>價格低至高</button>
+        <button className="sortprice" onClick={sort}>價格排序</button>
     </div>
     <table>
         <thead>
@@ -87,4 +79,5 @@ return(
     `}</style>   
 </>
 ) 
+
 }
