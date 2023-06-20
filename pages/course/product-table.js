@@ -13,7 +13,7 @@ export default function Product1Table() {
         
         setStatus(prestatus => !prestatus)
         setData1(sortdata);
-        }
+    }
         // console.log(sortdata)
 
 return(

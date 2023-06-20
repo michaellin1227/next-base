@@ -136,14 +136,30 @@ export default function ObjectArray() {
       </button>
       <br />
       <button onClick={() => {
-        const newData = data.filter(v=>v.text.includes('a'))
+        const newData = data.filter(v=>v.text !=='b')
+        
+        setData(newData)
       }}>6.刪除文字為b的物件資料</button>
       <br />
-      <button onClick={() => {}}>7.刪除id為4的物件資料</button>
+      <button onClick={() => {
+        const newData = data.filter(v=>v.id !==4)
+        
+        setData(newData)
+      }}>7.刪除id為4的物件資料</button>
       <br />
-      <button onClick={() => {}}>8.在id為2後面插入id為5與文字為bbb的物件</button>
+      <button onClick={() => {
+
+      }}>8.在id為2後面插入id為5與文字為bbb的物件</button>
       <br />
-      <button onClick={() => {}}>9.取代id為3的文字為cccc</button>
+      <button onClick={() => {
+        const newData = data.map(item=>{
+          if(item.id===3){
+            return {...item,text:'cccc'}
+          }
+          return item
+        })
+        setData(newData)
+      }}>9.取代id為3的文字為cccc</button>
     </>
   )
 }
