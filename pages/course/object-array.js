@@ -148,15 +148,13 @@ export default function ObjectArray() {
       }}>7.刪除id為4的物件資料</button>
       <br />
       <button onClick={() => {
+        
 
       }}>8.在id為2後面插入id為5與文字為bbb的物件</button>
       <br />
       <button onClick={() => {
         const newData = data.map(item=>{
-          if(item.id===3){
-            return {...item,text:'cccc'}
-          }
-          return item
+          return item.id===3 ? {...item,text:'cccc'} : item ;
         })
         setData(newData)
       }}>9.取代id為3的文字為cccc</button>
