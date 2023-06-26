@@ -1,16 +1,55 @@
 import { useState } from 'react'
-import { v4 } from 'uuid'
+// import { v4 } from 'uuid'
 
 export default function TodoIndex() {
   const [todos, setTodos] = useState([
     { id: 1, text: '給我好好學React', completed: false },
-    { id: 2, text: '給我努力做專題', completed: false },
+    { id: 6, text: '給我努力做專題', completed: false },
   ])
 
-  // 是否完成狀態
-  const [isCompleting, setIsCompelting] = useState(false)
+  //   // !!impure
+  //   const addTodo = (text) => {
+  //     const newTodo = {
+  //       id: Number(new Date()),
+  //       text: text,
+  //       completed: false,
+  //     }
+
+  //     return [...todos,newTodo]
+  //   }
 
   const [inputText, setInputText] = useState('')
+  
+  // 修正中文輸入法用(組字用Enter鍵時要排除掉)
+  const [isCompositing, setIsCompositing] = useState(false)
+
+
+  // pure
+  const add = (todos,text)=>{
+    // 用遞增id
+    const ids = todos.map(v=>v.id) // [1,2,3]
+    const newId = Math.max(...ids)+1 // 最大的id+1
+
+    const newTodo ={
+      id:newId,
+      text:text, // ??
+      completed:false
+    }
+    return [...todos,newTodo]
+  }
+
+  // pure 如果有比對到v.id是id，就作切換布林值的動作
+  const toggleCompleted = (todos,id)=>{
+    return todos.map(v=>{
+      if(v.id===id){
+        return {...v,completed: !v.completed}
+      }
+      else {
+        return {...v}
+      }
+    })
+  }
+
 
   return (
     <>
@@ -21,14 +60,16 @@ export default function TodoIndex() {
         onChange={(e) => {
           setInputText(e.target.value)
         }}
-        onCompositionEnd={() => setIsCompelting(false)}
-        onCompositionStart={() => setIsCompelting(true)}
+
+        // 中文輸入法組字時，打開信號狀態
+        onCompositionEnd={() => setIsCompositing(false)}
+        onCompositionStart={() => setIsCompositing(true)}
         
         // 送出資料
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !isCompleting) {
-            const newTodos = { id: v4(), text: inputText }
-            setTodos([...todos, newTodos])
+          if (e.key === 'Enter' && !isCompositing) {
+            // const newTodos = { id: v4(), text: inputText ,completed:false}
+            setTodos(add(todos, inputText))
             //清空輸入框
             setInputText('')
           }
@@ -37,24 +78,27 @@ export default function TodoIndex() {
 
       <ul>
         {todos.map((v, i) => {
+          // 先解構，方便後續程式撰寫
+          const {id,text,completed} = v
+
           return (
-            <li key={v.id}>
+            <li key={id}>
               <input
                 type="checkbox"
-                check={v.completed}
-                onChange={(e) => {
-                  const newTodos = todos.map((v2) => {
-                    if (v2.id === v.id) {
-                      return { ...v2, completed: !v2.completed }
-                    } else {
-                      return { ...v2 }
-                    }
-                  })
+                checked={completed}
+                onChange={() => {
+                  // const newTodos = todos.map((v2) => {
+                  //   if (v2.id === id) {
+                  //     return { ...v2, completed: !v2.completed }
+                  //   } else {
+                  //     return { ...v2 }
+                  //   }
+                  // })
+                  setTodos(toggleCompleted(todos,id))
 
-                  setTodos(newTodos)
                 }}
               />
-              {v.completed ? <del>{v.text}</del> : v.text}
+              {completed ? <del>{text}</del> : text}
             </li>
           )
         })}
