@@ -1,5 +1,6 @@
 import { useState } from 'react'
-// import { v4 } from 'uuid'
+import AddForm from './add-form'
+import Item from './list/item'
 
 export default function TodoIndex() {
   const [todos, setTodos] = useState([
@@ -18,88 +19,72 @@ export default function TodoIndex() {
   //     return [...todos,newTodo]
   //   }
 
-  const [inputText, setInputText] = useState('')
-  
-  // 修正中文輸入法用(組字用Enter鍵時要排除掉)
-  const [isCompositing, setIsCompositing] = useState(false)
-
-
   // pure
-  const add = (todos,text)=>{
+  const add = (todos, text) => {
     // 用遞增id
-    const ids = todos.map(v=>v.id) // [1,2,3]
-    const newId = Math.max(...ids)+1 // 最大的id+1
+    const ids = todos.map((v) => v.id) // [1,2,3]
+    // const newId = Math.max(...ids)+1 // 最大的id+1
+    // 狀態 todos沒資料時定義為1
+    const newId = todos.length > 0 ? Math.max(...ids) + 1 : 1
 
-    const newTodo ={
-      id:newId,
-      text:text, // ??
-      completed:false
+    const newTodo = {
+      id: newId,
+      text: text, // ??
+      completed: false,
     }
-    return [...todos,newTodo]
+    return [...todos, newTodo]
   }
 
-  // pure 如果有比對到v.id是id，就作切換布林值的動作
-  const toggleCompleted = (todos,id)=>{
-    return todos.map(v=>{
-      if(v.id===id){
-        return {...v,completed: !v.completed}
-      }
-      else {
-        return {...v}
+  // (單純處理狀態改變)pure 如果有比對到v.id是id，就作切換布林值的動作
+  const toggleCompleted = (todos, id) => {
+    return todos.map((v) => {
+      if (v.id === id) {
+        return { ...v, completed: !v.completed }
+      } else {
+        return { ...v }
       }
     })
   }
 
+  // (單純處理狀態改變)pure 如果有比對到v.id是id，就作移除
+  const remove = (todos, id) => {
+    return todos.filter((v) => v.id !== id)
+  }
+
+  //專門設計組合後給AddForm元件用的
+  const handleAdd = (inputText) => {
+    setTodos(add(todos, inputText))
+  }
+
+  const handletoggleCompleted = (id) => {
+    setTodos(toggleCompleted(todos, id))
+  }
+
+  const handleRemove = (id) => {
+    setTodos(remove(todos, id))
+  }
 
   return (
     <>
-      <input
-        type="text"
-        value={inputText}
-        // 取得輸入框的值
-        onChange={(e) => {
-          setInputText(e.target.value)
-        }}
-
-        // 中文輸入法組字時，打開信號狀態
-        onCompositionEnd={() => setIsCompositing(false)}
-        onCompositionStart={() => setIsCompositing(true)}
-        
-        // 送出資料
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !isCompositing) {
-            // const newTodos = { id: v4(), text: inputText ,completed:false}
-            setTodos(add(todos, inputText))
-            //清空輸入框
-            setInputText('')
-          }
-        }}
-      />
+      <AddForm handleAdd={handleAdd} />
 
       <ul>
         {todos.map((v, i) => {
           // 先解構，方便後續程式撰寫
-          const {id,text,completed} = v
+          const { id, text, completed } = v
 
+          // key值為必要，寫在map裡最近的return項目中
           return (
-            <li key={id}>
-              <input
-                type="checkbox"
-                checked={completed}
-                onChange={() => {
-                  // const newTodos = todos.map((v2) => {
-                  //   if (v2.id === id) {
-                  //     return { ...v2, completed: !v2.completed }
-                  //   } else {
-                  //     return { ...v2 }
-                  //   }
-                  // })
-                  setTodos(toggleCompleted(todos,id))
-
-                }}
-              />
-              {completed ? <del>{text}</del> : text}
-            </li>
+            <Item
+              // 一個個分別傳入屬性，為了方便在子元件解構(編輯器提示)
+              // 與子女元件最佳化重新渲染也有關
+              key={id}
+              id={id}
+              text={text}
+              completed={completed}
+              handletoggleCompleted={handletoggleCompleted}
+              handleRemove={handleRemove}
+            />
           )
         })}
       </ul>
