@@ -1,5 +1,5 @@
 
-export default function Item({id,text,completed,handletoggleCompleted,handleRemove}) {
+export default function Item() {
   return (
     <>
       <li key={id}>
