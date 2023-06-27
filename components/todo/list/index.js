@@ -1,8 +1,13 @@
 import Item from './item'
 
-export default function List() {
+export default function List(
+  { //??
+    todos=[],
+    handleToggleCompleted=()=>{},
+    handleRemove=()=>{},
+  }
+) {
   return (
-    <>
       <ul>
         {todos.map((v, i) => {
           // 先解構，方便後續程式撰寫
@@ -17,12 +22,11 @@ export default function List() {
               id={id}
               text={text}
               completed={completed}
-              handletoggleCompleted={handletoggleCompleted}
+              handleToggleCompleted={handleToggleCompleted}
               handleRemove={handleRemove}
             />
           )
         })}
       </ul>
-    </>
   )
 }

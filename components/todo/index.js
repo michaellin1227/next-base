@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import AddForm from './add-form'
-import Item from './list/item'
+import List from './list'
+
+const sample = [
+  { id: 1, text: '給我好好學React', completed: false },
+  { id: 6, text: '給我努力做專題', completed: false }]
 
 export default function TodoIndex() {
-  const [todos, setTodos] = useState([
-    { id: 1, text: '給我好好學React', completed: false },
-    { id: 6, text: '給我努力做專題', completed: false },
-  ])
+  const [todos, setTodos] = useState(sample)
 
   //   // !!impure
   //   const addTodo = (text) => {
@@ -56,7 +57,7 @@ export default function TodoIndex() {
     setTodos(add(todos, inputText))
   }
 
-  const handletoggleCompleted = (id) => {
+  const handleToggleCompleted = (id) => {
     setTodos(toggleCompleted(todos, id))
   }
 
@@ -67,27 +68,11 @@ export default function TodoIndex() {
   return (
     <>
       <AddForm handleAdd={handleAdd} />
-
-      <ul>
-        {todos.map((v, i) => {
-          // 先解構，方便後續程式撰寫
-          const { id, text, completed } = v
-
-          // key值為必要，寫在map裡最近的return項目中
-          return (
-            <Item
-              // 一個個分別傳入屬性，為了方便在子元件解構(編輯器提示)
-              // 與子女元件最佳化重新渲染也有關
-              // key={id}
-              // id={id}
-              // text={text}
-              // completed={completed}
-              // handletoggleCompleted={handletoggleCompleted}
-              // handleRemove={handleRemove}
-            />
-          )
-        })}
-      </ul>
+      <List
+        todos={todos} // ??
+        handleToggleCompleted={handleToggleCompleted}
+        handleRemove={handleRemove}
+      />
     </>
   )
 }
