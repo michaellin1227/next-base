@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Product from '@/components/shoppingcart'
 
 const initialProducts = [
   {
@@ -47,25 +48,10 @@ export default function ShoppingCart() {
 
   return (
     <ul>
-      {products.map((product) => (
-        <li key={product.id}>
-          {product.name}(<b>{product.count}</b>)
-          <button
-            onClick={() => {
-              productplus(product.id) // 0,1,2
-            }}
-          >
-            +
-          </button>
-          <button
-            onClick={() => {
-              productminus(product.id) // 0,1,2
-            }}
-          >
-            –
-          </button>
-        </li>
-      ))}
+      {products.map((product) => {
+        const {id,name,count} = product
+        return <Product id={id} name={name} count={count} productplus={productplus} productminus={productminus}/>
+      })}
     </ul>
   )
 }
