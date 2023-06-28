@@ -1,4 +1,6 @@
-export default function Item( //??
+import styles from '../todo.module.css'
+
+export default function Item( 
   {id=0,
   text='',
   completed=false,
@@ -7,7 +9,7 @@ export default function Item( //??
 ) {
   return (
     <>
-      <li>
+      <li className={`${completed ? styles.completed : styles.active}`}>
         <input
           type="checkbox"
           checked={completed}
@@ -15,8 +17,7 @@ export default function Item( //??
             handleToggleCompleted(id)
           }}
         />
-        {completed ? <del>{text}</del> : text}
-        {'  '}
+        {text}
         <button
           onClick={() => {
             // setTodos(remove(todos, id))

@@ -1,0 +1,22 @@
+.completed {
+  color: gray;
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.filter-button-normal {
+  background-color: #e7e7e7;
+  color: black;
+  border: 1px solid black;
+}
+
+.filter-button-active {
+  background-color: #008cba;
+  color: white;
+  border: 1px solid black;
+}

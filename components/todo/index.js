@@ -2,12 +2,20 @@ import { useState } from 'react'
 import AddForm from './add-form'
 import List from './list'
 
+import styles from './todo.module.css'
+
 const sample = [
   { id: 1, text: '給我好好學React', completed: false },
-  { id: 6, text: '給我努力做專題', completed: false }]
+  { id: 6, text: '給我努力做專題', completed: false },
+]
 
 export default function TodoIndex() {
   const [todos, setTodos] = useState(sample)
+
+  // type = '所有' | '進行中' | '已完成'
+  const [type, setType] = useState('所有')
+  // 所有的選項
+  const typeOptions = ['所有', '進行中', '已完成']
 
   //   // !!impure
   //   const addTodo = (text) => {
@@ -57,6 +65,14 @@ export default function TodoIndex() {
     setTodos(add(todos, inputText))
   }
 
+  // pure function(單純處理狀態改變) 因類型過濾
+  const filterByType = (todos, type) => {
+    if (type === '進行中') return todos.filter((v) => !v.completed)
+    if (type === '已完成') return todos.filter((v) => v.completed)
+
+    return todos
+  }
+
   const handleToggleCompleted = (id) => {
     setTodos(toggleCompleted(todos, id))
   }
@@ -69,10 +85,24 @@ export default function TodoIndex() {
     <>
       <AddForm handleAdd={handleAdd} />
       <List
-        todos={todos} // ??
+        todos={filterByType(todos, type)}
         handleToggleCompleted={handleToggleCompleted}
         handleRemove={handleRemove}
       />
+      <hr />
+      {typeOptions.map((v, i) => {
+        return (
+          <button
+            key={i} //靜態資料用索引當key是可以
+            className={type === v ? styles['filter-button-active'] : styles['filter-button-normal']}
+            onClick={() => {
+              setType(v)
+            }}
+          >
+            {v}
+          </button>
+        )
+      })}
     </>
   )
 }
