@@ -5,8 +5,9 @@ import List from './list'
 import styles from './todo.module.css'
 
 const sample = [
-  { id: 1, text: '給我好好學React', completed: false },
-  { id: 6, text: '給我努力做專題', completed: false },
+  { id: 1, text: '複習JavaScript', completed: false },
+  { id: 6, text: '整理客廳', completed: false },
+  { id: 9, text: '準備明天的早餐', completed: false },
 ]
 
 export default function TodoIndex() {
@@ -29,6 +30,7 @@ export default function TodoIndex() {
   //   }
 
   // pure
+  
   const add = (todos, text) => {
     // 用遞增id
     const ids = todos.map((v) => v.id) // [1,2,3]
